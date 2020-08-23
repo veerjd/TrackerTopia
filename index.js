@@ -1,15 +1,15 @@
-require('dotenv').config();
-const { Client, MessageEmbed, Collection } = require('discord.js');
-const bot = new Client();
+require('dotenv').config()
+const { Client, MessageEmbed, Collection } = require('discord.js')
+const bot = new Client()
 const fs = require('fs')
 const prefix = process.env.PREFIX
 
 // bot.commands as a collection(Map) of commands from ./commands
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-bot.commands = new Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+bot.commands = new Collection()
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  bot.commands.set(command.name, command);
+  const command = require(`./commands/${file}`)
+  bot.commands.set(command.name, command)
 }
 
 // --------------------------------------
@@ -19,10 +19,10 @@ for (const file of commandFiles) {
 // --------------------------------------
 bot.on('ready', () => {
   // eslint-disable-next-line no-console
-  console.log(`Logged in as ${bot.user.username}`);
+  console.log(`Logged in as ${bot.user.username}`)
 
   bot.user.setActivity(`${prefix}links`, { type: 'PLAYING' })
-});
+})
 
 // --------------------------------------
 //
@@ -41,11 +41,11 @@ bot.on('message', async message => {
 
   // Handling
   const textStr = message.content.slice(prefix.length)
-  const commandName = textStr.split(/ +/).shift().toLowerCase();
+  const commandName = textStr.split(/ +/).shift().toLowerCase()
   const argsStr = textStr.slice(commandName.length + 1)
 
   // Map all the commands
-  const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+  const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 
   // Return if the command doesn't exist
   if (!command)
@@ -77,7 +77,7 @@ bot.on('message', async message => {
 
   try {
     // EXECUTE COMMAND
-    const reply = await command.execute(message, argsStr, embed);
+    const reply = await command.execute(message, argsStr, embed)
 
     // if there's a reply, send it
     if(reply)
@@ -92,4 +92,4 @@ bot.on('message', async message => {
   }
 })
 
-bot.login(process.env.TOKEN);
+bot.login(process.env.TOKEN)

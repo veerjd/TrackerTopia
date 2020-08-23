@@ -13,7 +13,7 @@ module.exports = {
   usersAllowed: [''],
   execute(message, argsStr, embed) {
     // Pulling all the commands that are defined in index.js (line 8-13)
-    const { commands } = message.client;
+    const { commands } = message.client
     // Get the defined command, if there is one
     const argsArray = argsStr.split(/ +/)
     // Get Command Object
@@ -70,4 +70,4 @@ module.exports = {
       return embed
     }
   }
-};
+}

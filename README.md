@@ -6,9 +6,8 @@ Download LTS and install: https://nodejs.org/en
 
 ## Clone the repo
 
-1. Do `git clone https://github.com/veerjd/PolyBot.git` in the folder you want the folder project to appear in.
-2. Do `cd PolyBot`
-3. Do `npm install` to install all the packages necessary
+1. Do `git clone https://github.com/veerjd/discordjs-bot-template.git` in the folder you want the folder project to appear in.
+2. Do `cd discordjs-bot-template`
 
 ## Create the `.env` file in the root folder
 

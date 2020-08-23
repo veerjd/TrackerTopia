@@ -14,4 +14,4 @@ module.exports = {
   execute: async function(message, argsStr, embed) {
     // EXECUTE
   }
-};
+}
