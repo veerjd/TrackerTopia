@@ -10,6 +10,7 @@ module.exports = {
   },
   // You can have as many categories as you want, just make sure to update the help.js file with them
   category: 'Basic',
+  // eslint-disable-next-line no-unused-vars
   execute: async function(message, argsStr, embed) {
     if(!argsStr)
       throw 'You need to include the tribe...'

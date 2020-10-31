@@ -48,5 +48,13 @@ module.exports = {
       const { rows } = await pool.query(sql, values)
       return rows.length
     } catch(err) { throw err }
+  },
+  deleteGame: async (channelId) => {
+    const sql = 'DELETE FROM tracker WHERE channel_id = $1'
+    const values = [channelId]
+    try {
+      await pool.query(sql, values)
+      return true
+    } catch(err) { throw err }
   }
 }
