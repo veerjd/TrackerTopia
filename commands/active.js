@@ -14,13 +14,15 @@ module.exports = {
     try {
       const rows = await getChannels(message.guild.id)
 
-      const channels = ['Here are the channels for this server with registered kills:']
-      console.log(rows)
+      const channels = []
+
       rows.forEach(row => {
         channels.push(message.guild.channels.cache.get(row.channel_id))
       })
       if(channels.length < 1)
         throw 'There are no active channels in this server.'
+
+      channels.unshift('Here are the channels for this server with registered kills:')
 
       return channels
     } catch(err) { throw err }
