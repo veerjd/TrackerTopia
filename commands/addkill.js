@@ -17,10 +17,17 @@ module.exports = {
 
     const args = argsStr.split(/ +/).filter(x => x != '')
     const tribeArg = args[0].toLowerCase()
+    let times = 1
+    if(!isNaN(Number(args[1])))
+      times = Number(args[1])
+
+    console.log(times, '1')
 
     try {
       const tribe = getTribe(tribeArg)
-      await saveKill(message.guild.id, message.channel.id, tribe.code)
+      for(let i = 0; i < times; i++) {
+        await saveKill(message.guild.id, message.channel.id, tribe.code)
+      }
       const count = await getCount(message.channel.id, tribe.code)
 
       const newMessage = await message.channel.send(`Added a kill for ${tribe.name} successfully.\nTotal of **${count}** so far.`)
