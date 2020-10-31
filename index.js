@@ -33,12 +33,6 @@ bot.on('message', async message => {
   if(message.author.bot || !message.content.startsWith(prefix) || message.content === prefix)
     return
 
-  // If it's a DM
-  if(message.channel.type === 'dm') {
-    message.channel.send(`I do not support DM commands.\nYou can go into any server I'm in and do \`${prefix}help\` for all my commands.`)
-      .then().catch(console.error)
-  }
-
   // Handling
   const textStr = message.content.slice(prefix.length)
   const commandName = textStr.split(/ +/).shift().toLowerCase()
@@ -53,27 +47,6 @@ bot.on('message', async message => {
 
   // Instantiate the embed that's sent to every command execution
   const embed = new MessageEmbed().setColor('#ff0066')
-
-  // delete delays
-  const generalDelete = { timeout: 5000 }
-
-  // Warning when channel name includes general and delete both messages
-  if(message.channel.name.includes('general'))
-    return message.channel.send(`Come on! Not in #**${message.channel.name}**`)
-      .then(x => {
-        x.delete(generalDelete).then().catch(console.error)
-        message.delete(generalDelete).then().catch(console.error)
-      }).catch(console.error).catch(console.error)
-
-  // Check if command is allowed in that channel
-  if(command.channelsAllowed) { // Certain commands can only be triggered in specific channels
-    if(!(command.channelsAllowed && command.channelsAllowed.some(x => x === message.channel.id)))
-      return
-  }
-
-  // Check if the user has the permissions necessary to execute the command
-  if(!(command.permsAllowed.some(x => message.member.hasPermission(x)) || command.usersAllowed.some(x => x === message.author.id)))
-    return message.channel.send('Only an admin can use this command, sorry!')
 
   try {
     // EXECUTE COMMAND
