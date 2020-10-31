@@ -6,7 +6,7 @@ module.exports = {
   description: 'add a kill for a specific tribe associated with the channel',
   aliases: ['less', 'minus', 'rm'],
   usage(prefix) {
-    return `${prefix}kill b`
+    return `${prefix}rm b`
   },
   // You can have as many categories as you want, just make sure to update the help.js file with them
   category: 'Basic',
