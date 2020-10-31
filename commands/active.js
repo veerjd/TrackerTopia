@@ -14,7 +14,7 @@ module.exports = {
     try {
       const rows = await getChannels(message.guild.id)
 
-      const channels = []
+      const channels = ['Here are the channels for this server with registered kills:']
       console.log(rows)
       rows.forEach(row => {
         channels.push(message.guild.channels.cache.get(row.channel_id))
