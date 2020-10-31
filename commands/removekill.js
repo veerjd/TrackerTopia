@@ -1,10 +1,10 @@
 const { getTribe } = require('../util')
-const { saveKill, getCount } = require('../db')
+const { removeKill, getCount } = require('../db')
 
 module.exports = {
-  name: 'addkill',
+  name: 'removekill',
   description: 'add a kill for a specific tribe associated with the channel',
-  aliases: ['add', 'kill', 'k', ''],
+  aliases: ['less', 'minus', 'rm'],
   usage(prefix) {
     return `${prefix}kill b`
   },
@@ -19,10 +19,10 @@ module.exports = {
 
     try {
       const tribe = getTribe(tribeArg)
-      await saveKill(message.guild.id, message.channel.id, tribe.code)
+      await removeKill(message.guild.id, message.channel.id, tribe.code)
       const count = await getCount(message.channel.id, tribe.code)
 
-      const newMessage = await message.channel.send(`Added a kill for ${tribe.name} successfully.\nTotal of **${count}** so far.`)
+      const newMessage = await message.channel.send(`Oops, removed a kill for ${tribe.name} successfully.\nTotal of **${count}** so far.`)
       newMessage.delete({ timeout: 10000 })
 
       if(count > 9)

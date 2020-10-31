@@ -4,7 +4,7 @@ const { getKills } = require('../db')
 module.exports = {
   name: 'stats',
   description: 'get kills for this game/channel',
-  aliases: ['get', 'all'],
+  aliases: ['get'],
   usage(prefix) {
     return `${prefix}get`
   },
@@ -13,6 +13,9 @@ module.exports = {
   execute: async function(message, argsStr, embed) {
     try {
       const rows = await getKills(message.channel.id)
+
+      if(rows.length === 0)
+        throw 'No kills were registered yet'
 
       rows.forEach(row => {
         const tribe = getTribe(row.tribe)

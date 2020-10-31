@@ -46,7 +46,7 @@ bot.on('message', async message => {
     return
 
   // Instantiate the embed that's sent to every command execution
-  const embed = new MessageEmbed().setColor('#ff0066')
+  const embed = new MessageEmbed().setColor('#aa0000')
 
   try {
     // EXECUTE COMMAND
