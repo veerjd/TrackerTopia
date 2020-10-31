@@ -22,7 +22,7 @@ bot.on('ready', () => {
   // eslint-disable-next-line no-console
   console.log(`Logged in as ${bot.user.username}`)
 
-  bot.user.setActivity(`${prefix}links`, { type: 'PLAYING' })
+  bot.user.setActivity(`${prefix}help`, { type: 'PLAYING' })
 })
 
 // --------------------------------------
