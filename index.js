@@ -3,6 +3,7 @@ const { Client, MessageEmbed, Collection } = require('discord.js')
 const bot = new Client()
 const fs = require('fs')
 const prefix = process.env.PREFIX
+const { deleteGame } = require('./db')
 
 // bot.commands as a collection(Map) of commands from ./commands
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
@@ -63,6 +64,12 @@ bot.on('message', async message => {
     return message.channel.send(`${error}`)
       .then().catch(console.error)
   }
+})
+
+bot.on('channelDelete', async channelDelete => {
+  try {
+    await deleteGame(channelDelete.id)
+  } catch (err) { throw err }
 })
 
 bot.login(process.env.TOKEN)
