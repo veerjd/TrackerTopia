@@ -2,14 +2,13 @@ const { getTribe } = require('../util')
 const { getKills } = require('../db')
 
 module.exports = {
-  name: 'stats',
+  name: 'getkills',
   description: 'get kills for this game/channel',
-  aliases: ['get'],
+  aliases: ['kills'],
   usage(prefix) {
-    return `${prefix}get`
+    return `\`${prefix}get\``
   },
-  // You can have as many categories as you want, just make sure to update the help.js file with them
-  category: 'Basic',
+  category: 'Kills',
   execute: async function(message, argsStr, embed) {
     try {
       const rows = await getKills(message.channel.id)

@@ -6,10 +6,9 @@ module.exports = {
   description: 'add a kill for a specific tribe associated with the channel',
   aliases: ['less', 'minus', 'rm'],
   usage(prefix) {
-    return `${prefix}rm b`
+    return `\`${prefix}rm b\``
   },
-  // You can have as many categories as you want, just make sure to update the help.js file with them
-  category: 'Basic',
+  category: 'Kills',
   // eslint-disable-next-line no-unused-vars
   execute: async function(message, argsStr, embed) {
     if(!argsStr)

@@ -5,10 +5,9 @@ module.exports = {
   description: 'get all active/ongoing channels',
   aliases: ['ongoing'],
   usage(prefix) {
-    return `${prefix}active`
+    return `\`${prefix}active\``
   },
-  // You can have as many categories as you want, just make sure to update the help.js file with them
-  category: 'Basic',
+  category: 'Kills',
   // eslint-disable-next-line no-unused-vars
   execute: async function(message, argsStr, embed) {
     try {
