@@ -147,6 +147,10 @@ module.exports.getTribe = function(string) {
     throw 'The tribe isn\'t valid'
 }
 
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+
 module.exports.buildTableByTribe = function(tribe, rows) {
   const scores = rows.filter(x => tribe.code === x.tribe)
 
@@ -163,7 +167,6 @@ module.exports.buildTableByTribe = function(tribe, rows) {
   const visionArray = []
   scores.forEach((row, index) => {
     const turn = []
-    row.raw = scores.raw
     if(scores[index - 1])
       row.deltaRaw = row.raw - scores[index - 1].raw
 
@@ -188,6 +191,10 @@ module.exports.buildTableByTribe = function(tribe, rows) {
 
   return data
 }
+
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 
 module.exports.buildTraces = function(theseTribes, scores) {
   const tracesArray = new Collection()

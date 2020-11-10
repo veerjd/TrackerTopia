@@ -19,6 +19,8 @@ module.exports = {
       if(rows.length < 1)
         throw `Looks like no scores were captured for this game yet.\nTry ${setscore.usage(process.env.PREFIX)}`
 
+      message.channel.startTyping()
+
       const tribeArray = await getTribeArray(message.channel.id)
 
       const data = [];
@@ -49,6 +51,7 @@ module.exports = {
       plotly.plot(data, graphOptions, (err, msg) => {
         if(err)
           throw err
+        message.channel.stopTyping()
         message.channel.send(msg.url, { files: [{ attachment: `${msg.url}.png`, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
       });
 

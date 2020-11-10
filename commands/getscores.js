@@ -28,6 +28,11 @@ module.exports = {
 
       const tribes = tribe.filter(x => tribeArray.some(y => y.tribe === x.code))
 
+      if(tribes.length < 1)
+        throw `Seems like **${tribe[0].name}** doesn't have any score set for this game/channel :confused:`
+
+      message.channel.startTyping()
+
       tribes.forEach(trib => {
         const values = buildTableByTribe(trib, rows)
         const data = [{
@@ -52,6 +57,7 @@ module.exports = {
         plotly.plot(data, graphOptions, (err, msg) => {
           if(err)
             throw err
+          message.channel.stopTyping()
           message.channel.send(msg.url, { files: [{ attachment: `${msg.url}.png`, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
         });
       })

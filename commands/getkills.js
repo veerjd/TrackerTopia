@@ -6,7 +6,7 @@ module.exports = {
   description: 'get kills for this game/channel',
   aliases: ['kills'],
   usage(prefix) {
-    return `\`${prefix}get\``
+    return `\`${prefix}kills\``
   },
   category: 'Kills',
   execute: async function(message, argsStr, embed) {
