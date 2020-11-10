@@ -1,6 +1,6 @@
 const { buildTableByTribe, getTribe, getAllTribes } = require('../util')
 const { getScores, getTribeArray } = require('../db')
-const plotly = require('plotly')('alphaSeahorse', process.env.PLOTLYKEY);
+const plotly = require('plotly')(process.env.PLOTLYUSER, process.env.PLOTLYKEY);
 const hash = require('hash.js')
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
     try {
       const rows = await getScores(message.channel.id)
       if(rows.length < 1)
-        throw `Looks like no scores were captured for this game yet.\nTry \`${process.env.PREFIX}set vision b 0 550\``
+        throw `Looks like no scores were captured for this game yet.\nTry \`${this.usage(process.env.PREFIX)}\``
 
       const tribeArray = await getTribeArray(message.channel.id)
       let tribe
@@ -27,14 +27,13 @@ module.exports = {
         tribe = getAllTribes()
 
       const tribes = tribe.filter(x => tribeArray.some(y => y.tribe === x.code))
-      // console.log(tribes)
 
       tribes.forEach(trib => {
         const values = buildTableByTribe(trib, rows)
         const data = [{
           type: 'table',
           header: {
-            values: [['<b>Turn</b>'], ['<b>Points</b>'], ['<b>Raw</b>'], ['<b>ΔRaw</b>'], ['<b>ΔSeen</b>']],
+            values: [['<b>Turn</b>'], ['<b>ΔRaw</b>'], ['<b>ΔSeen</b>'], ['<b>Points</b>'], ['<b>Raw</b>']],
             align: 'center',
             line: { width: 1, color: 'black' },
             fill: { color: 'grey' },
@@ -51,6 +50,8 @@ module.exports = {
         const graphOptions = { layout: { title: `${trib.name}` }, filename: `${message.channel.id} ${trib.name}`, fileopt: 'overwrite' };
 
         plotly.plot(data, graphOptions, (err, msg) => {
+          if(err)
+            throw err
           message.channel.send(msg.url, { files: [{ attachment: `${msg.url}.png`, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
         });
       })

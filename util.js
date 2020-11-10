@@ -6,7 +6,7 @@ tribes.set('xin-xi', {
   code: 'x',
   color: 'rgb(238, 30, 24)',
   alias: ['x', 'xin', 'xinxi', 'xin-xi'],
-  vision: 515,
+  total: 515,
   raw: 390
 })
 tribes.set('imperius', {
@@ -14,7 +14,7 @@ tribes.set('imperius', {
   code: 'i',
   color: 'rgb(8, 110, 223)',
   alias: ['i', 'imp', 'imperius'],
-  vision: 515,
+  total: 515,
   raw: 390
 })
 tribes.set('bardur', {
@@ -22,7 +22,7 @@ tribes.set('bardur', {
   code: 'b',
   color: 'rgb(5, 0, 29)',
   alias: ['b', 'ba', 'bardur'],
-  vision: 515,
+  total: 515,
   raw: 390
 })
 tribes.set('oumaji', {
@@ -30,7 +30,7 @@ tribes.set('oumaji', {
   code: 'o',
   color: 'rgb(255, 255, 0)',
   alias: ['o', 'ou', 'oum', 'oumaji'],
-  vision: 520,
+  total: 520,
   raw: 295
 })
 tribes.set('kickoo', {
@@ -38,7 +38,7 @@ tribes.set('kickoo', {
   code: 'k',
   color: 'rgb(0, 255, 0)',
   alias: ['k', 'kick', 'kickoo'],
-  vision: 515,
+  total: 515,
   raw: 390
 })
 tribes.set('hoodrick', {
@@ -46,7 +46,7 @@ tribes.set('hoodrick', {
   code: 'h',
   color: 'rgb(153, 102, 0)',
   alias: ['h', 'hood', 'hoodrick'],
-  vision: 620,
+  total: 620,
   raw: 495
 })
 tribes.set('luxidoor', {
@@ -54,7 +54,7 @@ tribes.set('luxidoor', {
   code: 'l',
   color: 'rgb(171, 59, 214)',
   alias: ['l', 'lux', 'luxidoor'],
-  vision: 515,
+  total: 515,
   raw: 390
 })
 tribes.set('vengir', {
@@ -62,7 +62,7 @@ tribes.set('vengir', {
   code: 'v',
   color: 'rgb(179, 179, 179)',
   alias: ['v', 'ven', 'vengir'],
-  vision: 730,
+  total: 730,
   raw: 605
 })
 tribes.set('zebasi', {
@@ -70,7 +70,7 @@ tribes.set('zebasi', {
   code: 'z',
   color: 'rgb(255, 153, 0)',
   alias: ['z', 'zeb', 'zebasi'],
-  vision: 615,
+  total: 615,
   raw: 490
 })
 tribes.set('ai-mo', {
@@ -78,7 +78,7 @@ tribes.set('ai-mo', {
   code: 'ai',
   color: 'rgb(100, 212, 212)',
   alias: ['ai', 'aimo', 'ai-mo'],
-  vision: 615,
+  total: 615,
   raw: 490
 })
 tribes.set('quetzali', {
@@ -86,7 +86,7 @@ tribes.set('quetzali', {
   code: 'q',
   color: 'rgb(128, 0, 128)',
   alias: ['q', 'quetz', 'quetzali'],
-  vision: 620,
+  total: 620,
   raw: 496
 })
 tribes.set('yadakk', {
@@ -94,7 +94,7 @@ tribes.set('yadakk', {
   code: 'y',
   color: 'rgb(153, 45, 45)',
   alias: ['y', 'yad', 'yaddak', 'yadakk'],
-  vision: 615,
+  total: 615,
   raw: 490
 })
 tribes.set('aquarion', {
@@ -102,7 +102,7 @@ tribes.set('aquarion', {
   code: 'aq',
   color: 'rgb(248, 118, 118)',
   alias: ['aq', 'aquarion'],
-  vision: 415,
+  total: 415,
   raw: 290
 })
 tribes.set('elyrion', {
@@ -110,7 +110,7 @@ tribes.set('elyrion', {
   code: 'e',
   color: 'rgb(255, 0, 153)',
   alias: ['e', 'ely', 'elyrion'],
-  vision: 515,
+  total: 515,
   raw: 390
 })
 tribes.set('polaris', {
@@ -118,7 +118,7 @@ tribes.set('polaris', {
   code: 'p',
   color: 'rgb(189, 161, 127)',
   alias: ['p', 'pol', 'polaris'],
-  vision: 630,
+  total: 630,
   raw: 505
 })
 module.exports.getAllTribes = function() {
@@ -147,84 +147,135 @@ module.exports.getTribe = function(string) {
     throw 'The tribe isn\'t valid'
 }
 
-module.exports.isVisionScore = function(string) {
-  if(string.startsWith('vi'))
-    return true
-  else if(string.startsWith('vl') || string.startsWith('l') || string.startsWith('r'))
-    return false
-  else
-    throw 'Score type should start with `vi` for vision and `vl` or just `l` for visionless.'
-}
-
 module.exports.buildTableByTribe = function(tribe, rows) {
+  const scores = rows.filter(x => tribe.code === x.tribe)
 
+  scores.unshift({
+    tribe: tribe.code,
+    turn: -1,
+    total: tribe.total,
+    raw: tribe.raw,
+    deltaRaw: 0,
+    deltaVision: 0,
+    deltaSeen: 0
+  })
+
+  const visionArray = []
+  scores.forEach((row, index) => {
+    const turn = []
+    row.raw = scores.raw
+    if(scores[index - 1])
+      row.deltaRaw = row.raw - scores[index - 1].raw
+
+    if(scores[index - 1])
+      row.deltaVision = row.total - scores[index - 1].total - row.deltaRaw
+
+    row.deltaSeen = (row.deltaVision) / 5
+    // Turn  | ΔRaw  | ΔSeen | Pts | Raw
+    turn.push(row.turn, row.deltaRaw, row.deltaSeen, row.total, row.raw)
+    visionArray.push(turn)
+  })
+
+  const data = []
+
+  visionArray.forEach((record, index) => {
+    record.forEach((el, j) => {
+      if(index === 0)
+        data.push([])
+      data[j].push(el)
+    })
+  })
+
+  return data
 }
 
-module.exports.buildTraces = function(tribeArray, rows) {
-  const raw = rows.filter(x => !x.is_vision)
-  const vision = rows.filter(x => x.is_vision)
+module.exports.buildTraces = function(theseTribes, scores) {
   const tracesArray = new Collection()
+  // console.log(scores)
 
-  tribeArray.forEach(tribe => {
-    const tribeRaw = raw.filter(x => tribe.tribe === x.tribe)
-    const tribeVision = vision.filter(x => tribe.tribe === x.tribe)
+  theseTribes.forEach(tribeArg => {
+    const tribe = module.exports.getTribe(tribeArg.tribe)
+    const tribeScore = scores.filter(x => tribe.code === x.tribe)
 
-    const tribeName = module.exports.getTribe(tribe.tribe)
+    console.log(tribe.raw)
+    tribeScore.unshift({
+      tribe: tribe.code,
+      turn: -1,
+      total: tribe.total,
+      raw: tribe.raw,
+      deltaRaw: 0,
+      deltaVision: 0,
+      deltaSeen: 0
+    })
+    console.log(tribeScore.raw)
+
+    const visionArray = []
+    tribeScore.forEach((row, index) => {
+      const turn = []
+      if(tribeScore[index - 1])
+        row.deltaRaw = row.raw - tribeScore[index - 1].raw
+
+      if(tribeScore[index - 1])
+        row.deltaVision = row.total - tribeScore[index - 1].total - row.deltaRaw
+
+      row.deltaSeen = (row.deltaVision) / 5
+      // Turn  | ΔRaw  | ΔSeen | Pts | Raw
+      turn.push(row.turn, row.deltaRaw, row.deltaSeen, row.total, row.raw)
+      visionArray.push(turn)
+    })
+
+    console.log(tribeScore)
 
     const xRaw = []
     const yRaw = []
-    const tRaw = []
-    tribeRaw.forEach((x, index) => {
+    tribeScore.forEach(x => {
+      // console.log(x)
       xRaw.push(x.turn)
-      yRaw.push(x.score)
-      if(tribeVision[index - 1])
-        tRaw.push(`${ x.score - tribeVision[index - 1].score }Δ`)
-      else
-        tRaw.push('')
+      yRaw.push(x.raw)
     })
     const rawTrace = {
-      name: `${tribeName.code.toUpperCase()} raw`,
+      name: `${tribe.code.toUpperCase()} raw`,
       x: xRaw,
       y: yRaw,
-      text: tRaw,
       marker: {
-        color: tribeName.color
+        color: tribe.color
       },
       mode: 'markers+text',
+      line: {
+        dash: 'dot',
+        width: 2
+      },
+      connectgaps: true,
       textposition: 'top center',
       type: 'scatter',
       texttemplate: 'hello'
     }
 
-    tracesArray.set(`${tribeName.name} Raw`, rawTrace)
+    tracesArray.set(`${tribe.name} Raw`, rawTrace)
 
-    const xVision = []
-    const yVision = []
-    const tVision = []
-    tribeVision.forEach((x, index) => {
-      xVision.push(x.turn)
-      yVision.push(x.score)
-      if(tribeVision[index - 1])
-        tVision.push(`${ x.score - tribeVision[index - 1].score }Δ`)
-      else
-        tVision.push('')
+    const xTotal = []
+    const yTotal = []
+    tribeScore.forEach(x => {
+      xTotal.push(x.turn)
+      yTotal.push(x.total)
     })
     const visionTrace = {
-      name: `${tribeName.code.toUpperCase()} vision`,
-      x: xVision,
-      y: yVision,
-      text: tVision,
+      name: `${tribe.code.toUpperCase()} vision`,
+      x: xTotal,
+      y: yTotal,
       marker: {
-        color: tribeName.color
+        color: tribe.color
       },
       mode: 'markers+text',
+      connectgaps: true,
       textposition: 'top center',
       type: 'scatter',
       texttemplate: 'hello'
     }
 
-    tracesArray.set(`${tribeName.name} Vision`, visionTrace)
+    tracesArray.set(`${tribe.name} Vision`, visionTrace)
   })
+  // console.log(tracesArray)
   return tracesArray
 }
 
@@ -237,26 +288,18 @@ module.exports.buildTable = function(tribeArray, rows) {
     const tribeRaw = raw.filter(x => tribe.tribe === x.tribe)
     const tribeVision = vision.filter(x => tribe.tribe === x.tribe)
 
-    console.log(tribeRaw)
-    console.log(tribeVision)
     const tribeName = module.exports.getTribe(tribe.tribe)
 
     const xRaw = []
     const yRaw = []
-    const tRaw = []
-    tribeRaw.forEach((x, index) => {
+    tribeRaw.forEach(x => {
       xRaw.push(x.turn)
-      yRaw.push(x.score)
-      if(tribeVision[index - 1])
-        tRaw.push(`${ x.score - tribeVision[index - 1].score }Δ`)
-      else
-        tRaw.push('')
+      yRaw.push(x.total)
     })
     const rawTrace = {
       name: `${tribeName.code.toUpperCase()} raw`,
       x: xRaw,
       y: yRaw,
-      text: tRaw,
       marker: {
         color: tribeName.color
       },
@@ -270,20 +313,14 @@ module.exports.buildTable = function(tribeArray, rows) {
 
     const xVision = []
     const yVision = []
-    const tVision = []
-    tribeVision.forEach((x, index) => {
+    tribeVision.forEach(x => {
       xVision.push(x.turn)
-      yVision.push(x.score)
-      if(tribeVision[index - 1])
-        tVision.push(`${ x.score - tribeVision[index - 1].score }Δ`)
-      else
-        tVision.push('')
+      yVision.push(x.total)
     })
     const visionTrace = {
       name: `${tribeName.code.toUpperCase()} vision`,
       x: xVision,
       y: yVision,
-      text: tVision,
       marker: {
         color: tribeName.color
       },

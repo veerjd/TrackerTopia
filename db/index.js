@@ -57,17 +57,17 @@ module.exports = {
       return true
     } catch(err) { throw err }
   },
-  setScore: async (channelId, guildId, isVision, tribeCode, turn, score) => {
-    let sql = 'INSERT INTO scores (channel_id, guild_id, is_vision, tribe, turn, score) VALUES ($1, $2, $3, $4, $5, $6)'
-    let values = [channelId, guildId, isVision, tribeCode, turn, score]
+  setScore: async (channelId, guildId, tribeCode, turn, total, raw, comment) => {
+    let sql = 'INSERT INTO scores (channel_id, guild_id, tribe, turn, total, raw, comment) VALUES ($1, $2, $3, $4, $5, $6, $7)'
+    let values = [channelId, guildId, tribeCode, turn, total, raw, comment]
 
-    const sqlSel = 'SELECT id FROM scores WHERE channel_id = $1 AND tribe = $2 AND turn = $3 AND is_vision = $4'
-    const valuesSel = [channelId, tribeCode, turn, isVision]
+    const sqlSel = 'SELECT id FROM scores WHERE channel_id = $1 AND tribe = $2 AND turn = $3'
+    const valuesSel = [channelId, tribeCode, turn]
     const { rows } = await pool.query(sqlSel, valuesSel)
 
     if(rows.length > 0) {
-      sql = 'UPDATE scores SET score = $1 WHERE id = $2'
-      values = [score, rows[0].id]
+      sql = 'UPDATE scores SET total = $1, raw = $2, comment = $3 WHERE id = $4'
+      values = [total, raw, comment, rows[0].id]
     }
 
     try {
@@ -79,22 +79,21 @@ module.exports = {
     } catch(err) { throw err }
   },
   getScores: async (channelId) => {
-    const sql = 'SELECT is_vision, tribe, turn, score FROM scores WHERE channel_id = $1 ORDER BY tribe, is_vision, turn'
+    const sql = 'SELECT tribe, turn, total, raw, comment FROM scores WHERE channel_id = $1 ORDER BY tribe, turn'
     const values = [channelId]
     try {
       const { rows } = await pool.query(sql, values)
       return rows
     } catch(err) { throw err }
   },
-  // getTraceCount:  async (channelId) => {
-  //   const sql = 'SELECT COUNT(id), is_vision, tribe FROM scores WHERE channel_id = $1 GROUP BY is_vision, tribe'
-  //   const values = [channelId]
-  //   try {
-  //     const { rows } = await pool.query(sql, values)
-  //     console.log(rows)
-  //     return rows
-  //   } catch(err) { throw err }
-  // },
+  getGraph: async (channelId) => {
+    const sql = 'SELECT tribe, turn, total, raw FROM scores WHERE channel_id = $1 ORDER BY tribe, turn'
+    const values = [channelId]
+    try {
+      const { rows } = await pool.query(sql, values)
+      return rows
+    } catch(err) { throw err }
+  },
   getTribeArray:  async (channelId) => {
     const sql = 'SELECT DISTINCT tribe FROM scores WHERE channel_id = $1'
     const values = [channelId]
