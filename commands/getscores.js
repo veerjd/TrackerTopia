@@ -10,7 +10,7 @@ module.exports = {
   usage(prefix) {
     return `\`${prefix}get\``
   },
-  category: 'Score',
+  category: 'Scores',
   // eslint-disable-next-line no-unused-vars
   execute: async function(message, argsStr, embed) {
     try {

@@ -9,7 +9,7 @@ module.exports = {
     return `\`${prefix}set {tribe} {turn} {vision} {raw} [comment]\`\n` +
            `eg. \`${prefix}set b 2 1300 700 saw a lumber hut\``
   },
-  category: 'Score',
+  category: 'Scores',
   // eslint-disable-next-line no-unused-vars
   execute: async function(message, argsStr, embed) {
     if(!argsStr)

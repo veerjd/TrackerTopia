@@ -1,3 +1,5 @@
+const { MessageEmbed } = require('discord.js')
+
 module.exports = {
   name: 'help',
   description: 'list all the commands details',
@@ -14,15 +16,28 @@ module.exports = {
 
     embed.setTitle('Help card for all commands')
 
-    const sortedCommands = commands.sort((a, b) => a.category > b.category)
+    const kills = commands.filter(x => x.category.toLowerCase() === 'kills')
+    const scores = commands.filter(x => x.category.toLowerCase() === 'scores')
 
-    sortedCommands.forEach(cmd => {
+    embed.setTitle('Tracking Kills:')
+    kills.forEach(cmd => {
       if(cmd.category === 'hidden')
         return
 
       embed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
     })
 
-    return embed
+    message.channel.send(embed)
+
+    const otherEmbed = new MessageEmbed().setColor('#aa0000').setTitle('Tracking Scores:')
+
+    scores.forEach(cmd => {
+      if(cmd.category === 'hidden')
+        return
+
+      otherEmbed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
+    })
+
+    return otherEmbed
   }
 }
