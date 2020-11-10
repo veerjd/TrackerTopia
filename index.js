@@ -4,6 +4,7 @@ const bot = new Client()
 const fs = require('fs')
 const prefix = process.env.PREFIX
 const { deleteGame } = require('./db')
+let logChannel = {}
 
 // bot.commands as a collection(Map) of commands from ./commands
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
@@ -21,6 +22,7 @@ for (const file of commandFiles) {
 bot.on('ready', () => {
   // eslint-disable-next-line no-console
   console.log(`Logged in as ${bot.user.username} ${prefix}`)
+  logChannel = bot.channels.cache.get('775560585143648256')
 
   bot.user.setActivity(`${prefix}help`, { type: 'PLAYING' })
 })
@@ -56,7 +58,7 @@ bot.on('message', async message => {
     // if there's a reply, send it
     if(reply)
       message.channel.send(reply)
-        .then().catch(console.error)
+        .then(() => logChannel.send(`\`${message.cleanContent}\` by ${message.author} (${message.author.username})\n${message.url}`)).catch(console.error)
     return
   } catch (error) {
     // If error, log it and reply it
