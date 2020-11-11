@@ -33,7 +33,15 @@ module.exports = {
       return rows
     } catch(err) { throw err }
   },
-  getChannels: async (guildId) => {
+  getKillsChannels: async (guildId) => {
+    const sql = 'SELECT DISTINCT channel_id FROM kills WHERE guild_id = $1'
+    const values = [guildId]
+    try {
+      const { rows } = await pool.query(sql, values)
+      return rows
+    } catch(err) { throw err }
+  },
+  getScoresChannels: async (guildId) => {
     const sql = 'SELECT DISTINCT channel_id FROM kills WHERE guild_id = $1'
     const values = [guildId]
     try {

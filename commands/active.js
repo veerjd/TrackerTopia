@@ -1,4 +1,4 @@
-const { getChannels } = require('../db')
+const { getKillsChannels, getScoresChannels } = require('../db')
 
 module.exports = {
   name: 'active',
@@ -11,19 +11,32 @@ module.exports = {
   // eslint-disable-next-line no-unused-vars
   execute: async function(message, argsStr, embed) {
     try {
-      const rows = await getChannels(message.guild.id)
+      const killsRows = await getKillsChannels(message.guild.id)
 
-      const channels = []
+      const scoresRows = await getScoresChannels(message.guild.id)
 
-      rows.forEach(row => {
-        channels.push(message.guild.channels.cache.get(row.channel_id))
-      })
-      if(channels.length < 1)
+      if(scoresRows.length < 1 && killsRows < 1)
         throw 'There are no active channels in this server.'
 
-      channels.unshift('Here are the channels for this server with registered kills:')
+      let channels = ['Here are the channels for this server with registered **kills**:']
 
-      return channels
+      killsRows.forEach(row => {
+        channels.push(message.guild.channels.cache.get(row.channel_id))
+      })
+
+      console.log(channels)
+      if(channels.length > 1)
+        message.channel.send(channels)
+
+      channels = ['Here are the channels for this server with registered **scores**:']
+
+      scoresRows.forEach(row => {
+        channels.push(message.guild.channels.cache.get(row.channel_id))
+      })
+
+      console.log(channels)
+      if(channels.length > 1)
+        return channels
     } catch(err) { throw err }
   }
 }
