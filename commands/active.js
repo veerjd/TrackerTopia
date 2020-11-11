@@ -24,7 +24,6 @@ module.exports = {
         channels.push(message.guild.channels.cache.get(row.channel_id))
       })
 
-      console.log(channels)
       if(channels.length > 1)
         message.channel.send(channels)
 
@@ -34,7 +33,6 @@ module.exports = {
         channels.push(message.guild.channels.cache.get(row.channel_id))
       })
 
-      console.log(channels)
       if(channels.length > 1)
         return channels
     } catch(err) { throw err }
