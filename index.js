@@ -3,7 +3,7 @@ const { Client, MessageEmbed, Collection } = require('discord.js')
 const bot = new Client()
 const fs = require('fs')
 const prefix = process.env.PREFIX
-const { deleteGame } = require('./db')
+const { deleteKills } = require('./db')
 let logChannel = {}
 
 // bot.commands as a collection(Map) of commands from ./commands
@@ -70,7 +70,7 @@ bot.on('message', async message => {
 
 bot.on('channelDelete', async channelDelete => {
   try {
-    await deleteGame(channelDelete.id)
+    await deleteKills(channelDelete.id)
   } catch (err) { throw err }
 })
 

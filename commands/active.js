@@ -7,7 +7,7 @@ module.exports = {
   usage(prefix) {
     return `\`${prefix}active\``
   },
-  category: 'Kills',
+  category: 'All',
   // eslint-disable-next-line no-unused-vars
   execute: async function(message, argsStr, embed) {
     try {
@@ -21,6 +21,7 @@ module.exports = {
       let channels = ['Here are the channels for this server with registered **kills**:']
 
       killsRows.forEach(row => {
+        console.log('Kills:', row.channel_id)
         channels.push(message.guild.channels.cache.get(row.channel_id))
       })
 
@@ -28,8 +29,8 @@ module.exports = {
         message.channel.send(channels)
 
       channels = ['Here are the channels for this server with registered **scores**:']
-
       scoresRows.forEach(row => {
+        console.log('Scores:', row.channel_id)
         channels.push(message.guild.channels.cache.get(row.channel_id))
       })
 

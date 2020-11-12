@@ -18,9 +18,10 @@ module.exports = {
 
     const kills = commands.filter(x => x.category.toLowerCase() === 'kills')
     const scores = commands.filter(x => x.category.toLowerCase() === 'scores')
+    const all = commands.filter(x => x.category.toLowerCase() === 'all')
 
     embed.setTitle('Tracking Kills:')
-    kills.forEach(cmd => {
+    all.forEach(cmd => {
       if(cmd.category === 'hidden')
         return
 
@@ -31,13 +32,24 @@ module.exports = {
 
     const otherEmbed = new MessageEmbed().setColor('#aa0000').setTitle('Tracking Scores:')
 
-    scores.forEach(cmd => {
+    kills.forEach(cmd => {
       if(cmd.category === 'hidden')
         return
 
       otherEmbed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
     })
 
-    return otherEmbed
+    message.channel.send(otherEmbed)
+
+    const otherOtherEmbed = new MessageEmbed().setColor('#aa0000').setTitle('Tracking Scores:')
+
+    scores.forEach(cmd => {
+      if(cmd.category === 'hidden')
+        return
+
+      otherOtherEmbed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
+    })
+
+    return otherOtherEmbed
   }
 }

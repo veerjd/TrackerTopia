@@ -42,7 +42,7 @@ module.exports = {
     } catch(err) { throw err }
   },
   getScoresChannels: async (guildId) => {
-    const sql = 'SELECT DISTINCT channel_id FROM kills WHERE guild_id = $1'
+    const sql = 'SELECT DISTINCT channel_id FROM scores WHERE guild_id = $1'
     const values = [guildId]
     try {
       const { rows } = await pool.query(sql, values)
@@ -57,7 +57,33 @@ module.exports = {
       return rows.length
     } catch(err) { throw err }
   },
-  deleteGame: async (channelId) => {
+  isTracked: async (channelId) => {
+    const sql1 = 'SELECT id FROM scores WHERE channel_id = $1'
+    const sql2 = 'SELECT id FROM kills WHERE channel_id = $1'
+    const values = [channelId]
+    try {
+      const res1 = await pool.query(sql1, values)
+      const res2 = await pool.query(sql2, values)
+
+      if(res1.rows.length > 0 && res2.rows.length > 0)
+        return 'both'
+      else if(res1.rows.length > 0)
+        return 'scores'
+      else if(res2.rows.length > 0)
+        return 'kills'
+      else
+        return undefined
+    } catch(err) { throw err }
+  },
+  deleteScores: async (channelId) => {
+    const sql = 'DELETE FROM scores WHERE channel_id = $1'
+    const values = [channelId]
+    try {
+      await pool.query(sql, values)
+      return true
+    } catch(err) { throw err }
+  },
+  deleteKills: async (channelId) => {
     const sql = 'DELETE FROM kills WHERE channel_id = $1'
     const values = [channelId]
     try {
