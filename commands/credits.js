@@ -9,7 +9,7 @@ module.exports = {
   execute: function(message, argsStr, embed) {
     embed.setTitle('**TrackerTopia bot credits!**')
       .addField('Developer', 'jd (alphaSeahorse)')
-      .addField('Contributions', 'A Big Tree, Kunegetes, ulthripe and pomthom.')
+      .addField('Contributions', 'Legorooj, Kunegetes, A Big Tree, pomthom and ulthripe.')
 
     return embed
   }
