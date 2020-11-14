@@ -35,10 +35,11 @@ module.exports = {
 
       tribes.forEach(trib => {
         const values = buildTableByTribe(trib, rows)
+        console.log(values)
         const data = [{
           type: 'table',
           header: {
-            values: [['<b>Turn</b>'], ['<b>ΔRaw</b>'], ['<b>ΔSeen</b>'], ['<b>Points</b>'], ['<b>Raw</b>']],
+            values: [['<b>Turn</b>'], ['<b>ΔRaw</b>'], ['<b>ΔSeen</b>'], ['<b>Points</b>'], ['<b>Raw</b>'], ['<b>Comment</b>']],
             align: 'center',
             line: { width: 1, color: 'black' },
             fill: { color: 'grey' },
