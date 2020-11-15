@@ -199,13 +199,11 @@ module.exports.buildTableByTribe = function(tribe, rows) {
 
 module.exports.buildTraces = function(theseTribes, scores) {
   const tracesArray = new Collection()
-  // console.log(scores)
 
   theseTribes.forEach(tribeArg => {
     const tribe = module.exports.getTribe(tribeArg.tribe)
     const tribeScore = scores.filter(x => tribe.code === x.tribe)
 
-    console.log(tribe.raw)
     tribeScore.unshift({
       tribe: tribe.code,
       turn: -1,
@@ -215,7 +213,6 @@ module.exports.buildTraces = function(theseTribes, scores) {
       deltaVision: 0,
       deltaSeen: 0
     })
-    console.log(tribeScore.raw)
 
     const visionArray = []
     tribeScore.forEach((row, index) => {
@@ -232,12 +229,9 @@ module.exports.buildTraces = function(theseTribes, scores) {
       visionArray.push(turn)
     })
 
-    console.log(tribeScore)
-
     const xRaw = []
     const yRaw = []
     tribeScore.forEach(x => {
-      // console.log(x)
       xRaw.push(x.turn)
       yRaw.push(x.raw)
     })
@@ -283,7 +277,7 @@ module.exports.buildTraces = function(theseTribes, scores) {
 
     tracesArray.set(`${tribe.name} Vision`, visionTrace)
   })
-  // console.log(tracesArray)
+
   return tracesArray
 }
 

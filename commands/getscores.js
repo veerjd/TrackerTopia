@@ -2,6 +2,9 @@ const { buildTableByTribe, getTribe, getAllTribes } = require('../util')
 const { getScores, getTribeArray } = require('../db')
 const plotly = require('plotly')(process.env.PLOTLYUSER, process.env.PLOTLYKEY);
 const hash = require('hash.js')
+const sharp = require('sharp')
+const request = require('request');
+const fs = require('fs');
 
 module.exports = {
   name: 'getscores',
@@ -35,7 +38,6 @@ module.exports = {
 
       tribes.forEach(trib => {
         const values = buildTableByTribe(trib, rows)
-        console.log(values)
         const data = [{
           type: 'table',
           header: {
@@ -55,11 +57,41 @@ module.exports = {
 
         const graphOptions = { layout: { title: `${trib.name}` }, filename: `${message.channel.id} ${trib.name}`, fileopt: 'overwrite' };
 
-        plotly.plot(data, graphOptions, (err, msg) => {
+        plotly.plot(data, graphOptions, async (err, msg) => {
           if(err)
             throw err
-          message.channel.stopTyping()
-          message.channel.send(msg.url, { files: [{ attachment: `${msg.url}.png`, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
+
+
+          const options = {
+            url: msg.url + '.png',
+            method: 'get',
+            encoding: null
+          };
+
+          request(options, async function(error, response, body) {
+
+            if (error) {
+              throw error;
+            } else {
+              try {
+                const newImg = await sharp(body)
+                newImg.trim()
+                  .extend({
+                    top: 10,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                  })
+                  .toBuffer()
+
+                message.channel.stopTyping()
+                message.channel.send(msg.url, { files: [{ attachment: newImg, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
+              } catch (err) {
+                throw err
+              }
+            }
+          });
         });
       })
 
