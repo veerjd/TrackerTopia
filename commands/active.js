@@ -21,7 +21,6 @@ module.exports = {
       let channels = ['Here are the channels for this server with registered **kills**:']
 
       killsRows.forEach(row => {
-        console.log('Kills:', row.channel_id)
         channels.push(message.guild.channels.cache.get(row.channel_id))
       })
 
@@ -30,7 +29,6 @@ module.exports = {
 
       channels = ['Here are the channels for this server with registered **scores**:']
       scoresRows.forEach(row => {
-        console.log('Scores:', row.channel_id)
         channels.push(message.guild.channels.cache.get(row.channel_id))
       })
 

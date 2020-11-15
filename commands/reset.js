@@ -13,7 +13,6 @@ module.exports = {
     try {
       const tracked = await isTracked(message.channel.id)
 
-      console.log(tracked)
       const res = await message.channel.send(`Use the reaction to reset ${ tracked === 'both' ? '**kills**, **scores** or **both**' : '**' + tracked + '**' } for this game/channel.`)
       if(tracked === 'both') {
         res.react('🇰')

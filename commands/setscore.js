@@ -1,5 +1,6 @@
 const { getTribe } = require('../util')
 const { setScore } = require('../db')
+const getScore = require('./getscores')
 
 module.exports = {
   name: 'setscore',
@@ -42,7 +43,8 @@ module.exports = {
         newMessage.delete({ timeout: 10000 })
       }
 
-      return `**${total}** total and **${raw}** raw scores, were ${isUpdate ? '__updated__' : 'saved'} for **${tribe.name}** for turn **${turn}**!`
+      message.channel.send(`**${total}** total and **${raw}** raw scores, were ${isUpdate ? '__updated__' : 'saved'} for **${tribe.name}** for turn **${turn}**!`)
+      return getScore.execute(message, tribe.code, embed)
     } catch(err) { throw err }
   }
 }
