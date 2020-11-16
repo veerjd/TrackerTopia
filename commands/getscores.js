@@ -4,7 +4,6 @@ const plotly = require('plotly')(process.env.PLOTLYUSER, process.env.PLOTLYKEY);
 const hash = require('hash.js')
 const sharp = require('sharp')
 const request = require('request');
-const fs = require('fs');
 
 module.exports = {
   name: 'getscores',
@@ -50,12 +49,24 @@ module.exports = {
           cells: {
             values: values,
             align: 'center',
+            fill: {
+              color: '#36393F'
+            },
             line: { color: 'black', width: 1 },
-            font: { family: 'Arial', size: 11, color: ['black'] }
+            font: { family: 'Arial', size: 11, color: ['white'] }
           }
         }]
 
-        const graphOptions = { layout: { title: `${trib.name}` }, filename: `${message.channel.id} ${trib.name}`, fileopt: 'overwrite' };
+        const layout = {
+          title: `${trib.name}`,
+          paper_bgcolor: '#36393F',
+          plot_bgcolor: '#36393F',
+          font: {
+            color: '#FFFFFF'
+          }
+        };
+
+        const graphOptions = { layout, filename: `${message.channel.id} ${trib.name}`, fileopt: 'overwrite' };
 
         plotly.plot(data, graphOptions, async (err, msg) => {
           if(err)
@@ -75,13 +86,13 @@ module.exports = {
             } else {
               try {
                 const newImg = await sharp(body)
-                newImg.trim()
+                newImg.trim(0.1)
                   .extend({
                     top: 10,
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                    background: { r: 54, g: 57, b: 63, alpha: 1 }
                   })
                   .toBuffer()
 

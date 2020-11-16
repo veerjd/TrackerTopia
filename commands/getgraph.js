@@ -3,6 +3,8 @@ const { getGraph, getTribeArray } = require('../db')
 const setscore = require('./setscore')
 const plotly = require('plotly')(process.env.PLOTLYUSER, process.env.PLOTLYKEY);
 const hash = require('hash.js')
+const sharp = require('sharp')
+const request = require('request');
 
 module.exports = {
   name: 'getgraph',
@@ -32,7 +34,20 @@ module.exports = {
       })
 
       const layout = {
+        paper_bgcolor: '#36393F',
+        plot_bgcolor: '#36393F',
+        legend: {
+          font: {
+            color: '#FFFFFF'
+          }
+        },
+        grid: {
+          yaxes: {
+            color: '#FFFFFF',
+          }
+        },
         xaxis: {
+          color: '#FFFFFF',
           type: 'scatter',
           dtick: 1,
           title: {
@@ -40,6 +55,7 @@ module.exports = {
           }
         },
         yaxis: {
+          color: '#FFFFFF',
           type: 'scatter',
           title: {
             text: 'Scores'
@@ -51,8 +67,38 @@ module.exports = {
       plotly.plot(data, graphOptions, (err, msg) => {
         if(err)
           throw err
-        message.channel.stopTyping()
-        message.channel.send(msg.url, { files: [{ attachment: `${msg.url}.png`, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
+
+
+        const options = {
+          url: msg.url + '.png',
+          method: 'get',
+          encoding: null
+        };
+
+        request(options, async function(error, response, body) {
+
+          if (error) {
+            throw error;
+          } else {
+            try {
+              const newImg = await sharp(body)
+              newImg.trim()
+                .extend({
+                  top: 10,
+                  bottom: 5,
+                  left: 5,
+                  right: 5,
+                  background: { r: 54, g: 57, b: 63, alpha: 1 }
+                })
+                .toBuffer()
+
+              message.channel.stopTyping()
+              message.channel.send(msg.url, { files: [{ attachment: newImg, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
+            } catch (err) {
+              throw err
+            }
+          }
+        });
       });
 
       return
