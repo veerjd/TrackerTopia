@@ -55,7 +55,7 @@ bot.on('message', async message => {
     // EXECUTE COMMAND
     const reply = await command.execute(message, argsStr, embed)
 
-    logChannel.send(`\`${message.cleanContent}\` by ${message.author} (${message.author.username})\n${message.url}`)
+    await logChannel.send(`\`${message.cleanContent}\` by ${message.author} (${message.author.username})\n${message.url}`)
 
     // if there's a reply, send it
     if(reply)
@@ -82,6 +82,9 @@ bot.on('messageReactionAdd', async (reaction, user) => {
   if(reaction.partial) await reaction.fetch();
 
   if(user.id === bot.user.id)
+    return
+
+  if(reaction.message.author.id !== bot.user.id)
     return
 
   if(reaction.emoji.name !== '🗑️')
