@@ -55,10 +55,12 @@ bot.on('message', async message => {
     // EXECUTE COMMAND
     const reply = await command.execute(message, argsStr, embed)
 
+    logChannel.send(`\`${message.cleanContent}\` by ${message.author} (${message.author.username})\n${message.url}`)
+
     // if there's a reply, send it
     if(reply)
       message.channel.send(reply)
-        .then(() => logChannel.send(`\`${message.cleanContent}\` by ${message.author} (${message.author.username})\n${message.url}`)).catch(console.error)
+        .then().catch(console.error)
     return
   } catch (error) {
     // If error, log it and reply it
@@ -72,6 +74,20 @@ bot.on('channelDelete', async channelDelete => {
   try {
     await deleteKills(channelDelete.id)
   } catch (err) { throw err }
+})
+
+bot.on('messageReactionAdd', async (reaction, user) => {
+  if(reaction.message.partial) await reaction.message.fetch();
+
+  if(reaction.partial) await reaction.fetch();
+
+  if(user.id === bot.user.id)
+    return
+
+  if(reaction.emoji.name !== '🗑️')
+    return
+
+  return reaction.message.delete()
 })
 
 bot.login(process.env.TOKEN)

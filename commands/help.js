@@ -10,7 +10,7 @@ module.exports = {
   category: 'hidden', // Since 'hidden' category isn't in the categoriesMapped (see line 36), it won't display in the help command
   // User that can do the command regardless of .permsAllowed
   usersAllowed: [''],
-  execute(message, argsStr, embed) {
+  async execute(message, argsStr, embed) {
     // Pulling all the commands that are defined in index.js (line 8-13)
     const { commands } = message.client
 
@@ -20,36 +20,45 @@ module.exports = {
     const scores = commands.filter(x => x.category.toLowerCase() === 'scores')
     const all = commands.filter(x => x.category.toLowerCase() === 'all')
 
-    embed.setTitle('Tracking Kills:')
-    all.forEach(cmd => {
-      if(cmd.category === 'hidden')
-        return
+    try {
+      embed.setTitle('Tracking Kills:')
+      all.forEach(cmd => {
+        if(cmd.category === 'hidden')
+          return
 
-      embed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
-    })
+        embed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
+      })
 
-    message.channel.send(embed)
+      const msg1 = await message.channel.send(embed)
+      await msg1.react('🗑️')
 
-    const otherEmbed = new MessageEmbed().setColor('#aa0000').setTitle('Tracking Scores:')
+      const otherEmbed = new MessageEmbed().setColor('#aa0000').setTitle('Tracking Scores:')
 
-    kills.forEach(cmd => {
-      if(cmd.category === 'hidden')
-        return
+      kills.forEach(cmd => {
+        if(cmd.category === 'hidden')
+          return
 
-      otherEmbed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
-    })
+        otherEmbed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
+      })
 
-    message.channel.send(otherEmbed)
+      const msg2 = await message.channel.send(otherEmbed)
+      await msg2.react('🗑️')
 
-    const otherOtherEmbed = new MessageEmbed().setColor('#aa0000').setTitle('Tracking Scores:')
+      const otherOtherEmbed = new MessageEmbed().setColor('#aa0000').setTitle('Tracking Scores:')
 
-    scores.forEach(cmd => {
-      if(cmd.category === 'hidden')
-        return
+      scores.forEach(cmd => {
+        if(cmd.category === 'hidden')
+          return
 
-      otherOtherEmbed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
-    })
+        otherOtherEmbed.addField(`:arrow_right: **${cmd.name}** :arrow_left:`, `**Description:** ${cmd.description}\n**Aliases:** ${cmd.aliases.toString()}\n**Usage:** ${cmd.usage(process.env.PREFIX)}`)
+      })
 
-    return otherOtherEmbed
+      const msg3 = await message.channel.send(otherOtherEmbed)
+      await msg3.react('🗑️')
+
+      return
+    } catch (error) {
+      throw error
+    }
   }
 }
