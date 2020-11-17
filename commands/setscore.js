@@ -14,35 +14,41 @@ module.exports = {
   execute: async function(message, argsStr, embed) {
     if(!argsStr)
       throw 'You need to include the tribe...'
-    try {
-      const args = argsStr.split(/ +/).filter(x => x != '')
 
-      const tribeArg = args.shift().toLowerCase()
-      const turn = Number(args.shift())
-      const total = Number(args.shift())
-      let raw = Number(args.shift())
-      const comment = args.join(' ')
+    const times = argsStr.split(',').filter(x => x != '')
 
-      if(turn < 0)
-        throw 'Turn -1 is automatically set by the tribe'
-      if(isNaN(turn))
-        throw `The turn is not set right. Use this format:\n${this.usage(process.env.PREFIX)}`
-      if(isNaN(total))
-        throw `The score is not set right. Use this format:\n${this.usage(process.env.PREFIX)}`
-      if(isNaN(raw))
-        raw = undefined
-      if(total < raw)
-        throw 'Score with vision should be before raw score'
+    for (const arg of times) {
+      try {
+        const args = arg.split(/ +/).filter(x => x != '')
 
-      const tribe = getTribe(tribeArg)
+        const tribeArg = args.shift().toLowerCase()
+        const turn = Number(args.shift())
+        const total = Number(args.shift())
+        let raw = Number(args.shift())
+        const comment = args.join(' ')
 
-      const isUpdate = await setScore(message.channel.id, message.guild.id, tribe.code, turn, total, raw, comment)
-      if(isUpdate) {
-        const newMessage = await message.channel.send(`:warning: Careful ${message.author} :warning:\nYou just updated a previously set score.`)
-        newMessage.delete({ timeout: 10000 })
-      }
+        const tribe = getTribe(tribeArg)
 
-      return `**${total}** total and **${raw}** raw scores, were ${isUpdate ? '__updated__' : 'saved'} for **${tribe.name}** for turn **${turn}**!`
-    } catch(err) { throw err }
+        if(turn < 0)
+          throw 'Turn -1 is automatically set by the tribe'
+        if(isNaN(turn))
+          throw `**${tribe.name}**'s turn was not inputted right. Use this format:`
+        if(isNaN(total))
+          throw `**${tribe.name}**'s score was not inputted right. Use this format:`
+        if(isNaN(raw))
+          raw = undefined
+        if(total < raw)
+          throw `Score with vision should be before raw score for ${tribe.name}`
+
+        const isUpdate = await setScore(message.channel.id, message.guild.id, tribe.code, turn, total, raw, comment)
+        if(isUpdate) {
+          const newMessage = await message.channel.send(`:warning: Careful ${message.author} :warning:\nYou just updated a previously set score.`)
+          newMessage.delete({ timeout: 10000 })
+        }
+
+        message.channel.send(`**${total}** total and **${raw}** raw scores, were ${isUpdate ? '__updated__' : 'saved'} for **${tribe.name}** for turn **${turn}**!`)
+      } catch(err) { throw `${err}\n${this.usage(process.env.PREFIX)}` }
+    }
+    return
   }
 }
