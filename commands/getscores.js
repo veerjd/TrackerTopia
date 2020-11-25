@@ -40,7 +40,7 @@ module.exports = {
         const data = [{
           type: 'table',
           header: {
-            values: [['<b>Turn</b>'], ['<b>ΔRaw</b>'], ['<b>ΔSeen</b>'], ['<b>Points</b>'], ['<b>Raw</b>'], ['<b>Comment</b>']],
+            values: [['<b>Turn</b>'], ['<b>ΔScore</b>'], ['<b>Points</b>'], ['<b>Comment</b>']],
             align: 'center',
             line: { width: 1, color: 'black' },
             fill: { color: 'grey' },
