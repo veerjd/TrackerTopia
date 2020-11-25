@@ -15,10 +15,10 @@ module.exports = {
   },
   category: 'Scores',
   // eslint-disable-next-line no-unused-vars
-  execute: async function(message, argsStr, embed) {
+  execute: async function (message, argsStr, embed) {
     try {
       const rows = await getGraph(message.channel.id)
-      if(rows.length < 1)
+      if (rows.length < 1)
         throw `Looks like no scores were captured for this game yet.\nTry ${setscore.usage(process.env.PREFIX)}`
 
       message.channel.startTyping()
@@ -65,7 +65,7 @@ module.exports = {
       const graphOptions = { layout: layout, filename: message.channel.id, fileopt: 'overwrite' };
 
       plotly.plot(data, graphOptions, (err, msg) => {
-        if(err)
+        if (err)
           throw err
 
 
@@ -75,7 +75,7 @@ module.exports = {
           encoding: null
         };
 
-        request(options, async function(error, response, body) {
+        request(options, async function (error, response, body) {
 
           if (error) {
             throw error;
@@ -92,7 +92,6 @@ module.exports = {
                 })
                 .toBuffer()
 
-              message.channel.stopTyping()
               message.channel.send(msg.url, { files: [{ attachment: newImg, name: `${hash.sha1().update(Math.random().toString()).digest('hex')}.jpg` }] })
             } catch (err) {
               throw err
@@ -102,6 +101,6 @@ module.exports = {
       });
 
       return
-    } catch(err) { throw err }
+    } catch (err) { throw err }
   }
 }

@@ -33,7 +33,7 @@ bot.on('ready', () => {
 //
 // --------------------------------------
 bot.on('message', async message => {
-  if(message.author.bot || !message.content.startsWith(prefix) || message.content === prefix)
+  if (message.author.bot || !message.content.startsWith(prefix) || message.content === prefix)
     return
 
   // Handling
@@ -44,6 +44,8 @@ bot.on('message', async message => {
   // Map all the commands
   const command = bot.commands.get(commandName) || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 
+  if (message.channel.id === '775560585143648256')
+    console.log(command)
   // Return if the command doesn't exist
   if (!command)
     return
@@ -57,8 +59,10 @@ bot.on('message', async message => {
 
     await logChannel.send(`\`${message.cleanContent}\` by ${message.author} (${message.author.username})\n${message.url}`)
 
+    message.channel.stopTyping()
+
     // if there's a reply, send it
-    if(reply)
+    if (reply)
       message.channel.send(reply)
         .then().catch(console.error)
     return
@@ -77,17 +81,17 @@ bot.on('channelDelete', async channelDelete => {
 })
 
 bot.on('messageReactionAdd', async (reaction, user) => {
-  if(reaction.message.partial) await reaction.message.fetch();
+  if (reaction.message.partial) await reaction.message.fetch();
 
-  if(reaction.partial) await reaction.fetch();
+  if (reaction.partial) await reaction.fetch();
 
-  if(user.id === bot.user.id)
+  if (user.id === bot.user.id)
     return
 
-  if(reaction.message.author.id !== bot.user.id)
+  if (reaction.message.author.id !== bot.user.id)
     return
 
-  if(reaction.emoji.name !== '🗑️')
+  if (reaction.emoji.name !== '🗑️')
     return
 
   return reaction.message.delete()
