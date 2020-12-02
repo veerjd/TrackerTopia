@@ -100,7 +100,7 @@ module.exports = {
     const { rows } = await pool.query(sqlSel, valuesSel)
 
     if (rows.length > 0) {
-      sql = 'UPDATE scores SET total = $1, comment = $3 WHERE id = $4'
+      sql = 'UPDATE scores SET total = $1, comment = $2 WHERE id = $3'
       values = [total, comment, rows[0].id]
     }
 
